@@ -73,6 +73,7 @@ let divNum = 0
 let step = 2
 let removableBoxes = []
 let permittedPiece = []
+let castlingArr = []
 let bishopSteps = []
 let board = []
 let eatableData
@@ -104,25 +105,25 @@ function letterArrDiv () {
 letterArrDiv()
 
 const removeEachEvent = (pice) => {
-    pice.classList.remove('checked')
-    pice.classList.remove('edible')
-    pice.removeEventListener('click' , goingTo)
-    pice.removeEventListener('click' , moves)
+    console.log(pice)
+        pice.classList.remove('checked')
+        pice.classList.remove('edible')
+        pice.classList.remove('castling')
+        pice.removeEventListener('click' , castlToShort)
+        pice.removeEventListener('click' , castlToLong)
+        pice.removeEventListener('click' , goingTo)
+        pice.removeEventListener('click' , moves)
+        pice.removeEventListener('click' , eateing)
 }
 
 const removeEvents = () => {
-    removableBoxes.map(remBox => {
-        remBox.classList.remove('checked')
-        remBox.classList.remove('edible')
-        remBox.removeEventListener('click' , goingTo)
-        remBox.removeEventListener('click' , moves)
-        remBox.removeEventListener('click' , eateing)
-    })
-    permittedPiece.map(piece => {
-        removeEachEvent(piece)
-    })
+    console.log('remove Events')
+    removableBoxes.map(remBox => removeEachEvent(remBox))
+    permittedPiece.map(piece => removeEachEvent(piece))
+    castlingArr.map(cast => removeEachEvent(cast))
     permittedPiece = []
-     = []
+    removableBoxes = []
+    castlingArr = []
 }
 
 
@@ -133,7 +134,6 @@ const addEdibleEvent = (box) => {
 }
 
 const addBoxEvents = (box) => {
-    console.log(box)
     box.classList.add('checked')
     box.addEventListener('click', goingTo)   
 }
@@ -166,7 +166,7 @@ const eateing = (e) => {
 }
 
 const goingTo = (e) => {
-    console.log(e.target)
+
     e.target.appendChild(child)
     let data = e.target.children[0].dataset
         data.type == 'rook' && e.target.dataset.x == 1 && e.target.dataset.y == 1?  whiteKingLongStep = false: null;
@@ -181,8 +181,7 @@ const goingTo = (e) => {
             blackKingLongStep = false;
             blackKingShortStep = false;
         }
-    console.log(e.target.dataset)
-    console.log(data)
+
     if (data.color == 'white' && e.target.dataset.y == 8) {
         changePawnTo(data.color)
     }else if (data.color == 'black' && e.target.dataset.y == 1) {
@@ -196,7 +195,6 @@ const goingTo = (e) => {
 const whitePawnStap = (x,y,step,color,finesh,cycle) => {
     y++
     if (step <= 0 || finesh || y == 9) { return }
-    console.log(step,y)
     board.reverse().map(box => {
         if (cycle == 1) {
             if (box.children.length>0 && box.children[0].dataset.color !=  color && box.dataset.x == +x-1 && box.dataset.y == +y) {
@@ -524,8 +522,8 @@ const castlToLong = (x,y,child,king) => {
         removeBoxEvent(box)
     })
     setTurnEvent()
-
 }
+
 const castlToShort = (x,y,child,king) => {
     board.map(box => {
         if (box.dataset.x == x+1 && box.dataset.y == y) {
@@ -543,12 +541,13 @@ const longSideCastling = (x,y,king) => {
     let charCount = 0
     board.filter(box => {
         box.dataset.x < x && box.dataset.y == y?box.children.length == 0 ? charCount++ : null :null;
-    })
+        })
     if (charCount == 3) {
         board.filter(box => {
             if (box.dataset.x == 1 && box.dataset.y == y) {
                 box.children[0].addEventListener('click',() => castlToLong(x,y,box.children[0],king))
                 box.classList.add('castling')
+                castlingArr.push(box)
             }
         })
     }
@@ -564,6 +563,7 @@ const shortSideCastling = (x,y,king) => {
             if (box.dataset.x == 8 && box.dataset.y == y) {
                 box.children[0].addEventListener('click',() => castlToShort(x,y,box.children[0],king))
                 box.classList.add('castling')
+                castlingArr.push(box)
             }
         })
     }
@@ -596,7 +596,7 @@ const kingsMove = (img) => {
 }
 
 const moves = (imgMove) => {
-    console.log(imgMove)
+
     removeEvents()
     imgMove.target.dataset.type === "pawn"? pawnMove(imgMove) :null;
     imgMove.target.dataset.type === 'knight'? knightMove(imgMove): null;

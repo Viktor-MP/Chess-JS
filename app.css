@@ -115,18 +115,17 @@ h1 {
 .checked {
   background-color: chartreuse;
 }
-.edible {
-  background-color: rgb(255, 20, 20);
-}
-
-.castling {
-  background-color: rgb(255, 216, 20,);
-}
-
 .checked:hover {
   background-color: rgb(157, 255, 0);
 }
 
+.edible {
+  background-color: rgb(255, 20, 20);
+}
+
 .edible:hover {
   background-color: rgb(255, 51, 51);
+}
+.castling {
+  background-color: rgb(255, 216, 20);
 }
