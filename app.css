@@ -1,0 +1,132 @@
+* {
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+}
+
+.white {
+  background-color: #f9f6ee;
+}
+.black {
+  background-color: #63462d;
+  color: black;
+}
+
+.chessBord {
+  width: 50px;
+  height: 50px;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+#bord {
+  background-color: #bc8250;
+  align-items: end;
+  display: flex;
+  flex-wrap: wrap;
+  width: 440px;
+  height: 440px;
+
+  margin-top: 100px;
+  position: absolute;
+  left: 50%;
+
+  transform: translatex(-50%);
+}
+#mainBord {
+  z-index: 2;
+  position: absolute;
+  left: 25px;
+  right: 0;
+  bottom: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 400px;
+  height: 400px;
+}
+h1 {
+  position: absolute;
+  padding-top: 30px;
+}
+
+#divForNumber {
+  display: flex;
+  position: absolute;
+  bottom: 25px;
+  width: 25px;
+  height: 400px;
+  flex-direction: column;
+  align-items: center;
+}
+
+#divForLetters {
+  /* position: absolute; */
+  margin-left: 25px;
+  display: flex;
+  flex-direction: row;
+  height: 25px;
+  align-items: center;
+  text-align: center;
+}
+.numItem {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  border-bottom: solid black 1px;
+  border-top: solid black 1px;
+}
+.letterItem {
+  /* display:block; */
+  border-left: solid black 1px;
+  border-right: solid black 1px;
+
+  width: 50px;
+}
+
+/* ////////////////////////////////////// */
+
+#startGame {
+  position: absolute;
+  left: 15%;
+  top: 100px;
+  border-radius: 15px;
+  padding: 10px;
+}
+
+.char {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+}
+.charHover:hover {
+  background-color: rgb(149, 254, 254);
+  transition: 0.5s;
+}
+
+
+/* =========================================== */
+
+
+.checked {
+  background-color: chartreuse;
+}
+.edible {
+  background-color: rgb(255, 20, 20);
+}
+
+.castling {
+  background-color: rgb(255, 216, 20,);
+}
+
+.checked:hover {
+  background-color: rgb(157, 255, 0);
+}
+
+.edible:hover {
+  background-color: rgb(255, 51, 51);
+}
