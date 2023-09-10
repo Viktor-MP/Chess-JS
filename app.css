@@ -2,6 +2,7 @@
   margin: 0px;
   padding: 0px;
   box-sizing: border-box;
+  user-select: none;
 }
 
 .white {
@@ -9,7 +10,6 @@
 }
 .black {
   background-color: #63462d;
-  color: black;
 }
 
 .chessBord {
@@ -18,88 +18,92 @@
 }
 
 #root {
+  
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100vh;
-  position: relative;
 }
+
 #bord {
+  padding-top: 15px;
   background-color: #bc8250;
-  align-items: end;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-areas:
+    "numArea boardArea"
+    "numArea letterArea";
   width: 440px;
   height: 440px;
-
   margin-top: 100px;
-  position: absolute;
-  left: 50%;
-
-  transform: translatex(-50%);
 }
+
 #mainBord {
-  z-index: 2;
-  position: absolute;
-  left: 25px;
-  right: 0;
-  bottom: 25px;
-  display: flex;
-  flex-wrap: wrap;
+  position: relative;
+
   width: 400px;
   height: 400px;
+  display: grid;
+  grid-area: boardArea;
+  grid-template-areas: "a a a a a a a a";
+  gap: 0;
 }
 h1 {
-  position: absolute;
   padding-top: 30px;
+
 }
 
 #divForNumber {
-  display: flex;
-  position: absolute;
-  bottom: 25px;
-  width: 25px;
-  height: 400px;
-  flex-direction: column;
-  align-items: center;
+  grid-area: numArea;
 }
 
 #divForLetters {
-  /* position: absolute; */
-  margin-left: 25px;
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-areas: " a a a a a a a a";
+  grid-area: letterArea;
+  width: 400px;
   height: 25px;
-  align-items: center;
-  text-align: center;
+}
+
+#divForLetters :first-child {
+  border-left: solid black 2px;
+}
+#divForLetters :last-child {
+  border-right: solid black 2px;
+}
+
+#divForNumber :first-child {
+  border-top: solid black 2px;
+}
+#divForNumber :last-child {
+  border-bottom: solid black 2px;
 }
 .numItem {
+  
   height: 50px;
   display: flex;
+  justify-content: center;
   align-items: center;
+  font-size: 1.2rem;
   border-bottom: solid black 1px;
   border-top: solid black 1px;
 }
 .letterItem {
-  /* display:block; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
   border-left: solid black 1px;
   border-right: solid black 1px;
-
+  height: 25px;
   width: 50px;
 }
 
 /* ////////////////////////////////////// */
 
-#startGame {
-  position: absolute;
-  left: 15%;
-  top: 100px;
-  border-radius: 15px;
-  padding: 10px;
-}
+
 
 .char {
-  position: absolute;
   width: 50px;
   height: 50px;
 }
@@ -108,9 +112,7 @@ h1 {
   transition: 0.5s;
 }
 
-
 /* =========================================== */
-
 
 .checked {
   background-color: chartreuse;
@@ -128,4 +130,12 @@ h1 {
 }
 .castling {
   background-color: rgb(255, 216, 20);
+}
+
+.toCastlWith {
+  position: absolute;
+  right: -65px;
+  border: #63462d solid 2px;
+  width: 50px;
+  height: 200px;
 }

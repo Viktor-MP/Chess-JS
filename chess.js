@@ -4,7 +4,7 @@ const div = document.createElement('div')
 const divForNumber = document.createElement('div')
 const divForLetters = document.createElement('div')
 const mainBord = document.createElement('div')
-const root= document.getElementById("root")
+const root = document.getElementById("root")
 
 
 
@@ -60,7 +60,8 @@ const chessChart = [
 
 const numArr = ['1','2','3','4','5','6','7','8']
 const letterArr = ['A','B','C','D','E','F','G','H']
-let turnTo = true
+
+
 
 let whiteKingLongStep = true
 let blackKingLongStep = true
@@ -68,12 +69,15 @@ let blackKingLongStep = true
 let whiteKingShortStep = true
 let blackKingShortStep = true
 
+let turnTo = true
+
 let bordCount = 0
 let divNum = 0
 let step = 2
 let removableBoxes = []
 let permittedPiece = []
 let castlingArr = []
+let changePawnArr = []
 let bishopSteps = []
 let board = []
 let eatableData
@@ -105,7 +109,7 @@ function letterArrDiv () {
 letterArrDiv()
 
 const removeEachEvent = (pice) => {
-    console.log(pice)
+    // console.log(pice)
         pice.classList.remove('checked')
         pice.classList.remove('edible')
         pice.classList.remove('castling')
@@ -117,7 +121,7 @@ const removeEachEvent = (pice) => {
 }
 
 const removeEvents = () => {
-    console.log('remove Events')
+    // console.log('remove Events')
     removableBoxes.map(remBox => removeEachEvent(remBox))
     permittedPiece.map(piece => removeEachEvent(piece))
     castlingArr.map(cast => removeEachEvent(cast))
@@ -128,7 +132,6 @@ const removeEvents = () => {
 
 
 const addEdibleEvent = (box) => {
-    console.log('addEdibleEvent')
     box.classList.add('edible')
     box.addEventListener('click', eateing)
 }
@@ -147,6 +150,7 @@ const removeBoxEvent = (box) => {
 }
 
 const setTurnEvent = () => {
+
     board.map(box => {
         if (box.children.length>0 ) {
             box.children[0].removeEventListener('click' , moves)
@@ -158,22 +162,71 @@ const setTurnEvent = () => {
     turnTo = !turnTo}
 
 const eateing = (e) => {
+
     child.removeEventListener('click', eateing)
     e.target.parentElement.appendChild(child)
+
     e.target.remove(e.target);
+    if (child.parentElement.dataset.y == 8 && child.dataset.color == 'white') {
+        changePawnTo(child.dataset.color,child.parentElement)
+    }if (child.parentElement.dataset.y == 1 && child.dataset.color == 'black') {
+        changePawnTo(child.dataset.color,child.parentElement)
+    }
     removeEvents()
     setTurnEvent()
 }
 
-const goingTo = (e) => {
 
+const pawChangeWith = (args,e) => {
+
+    e.target.dataset.turn = true
+    args.replaceChild(e.target, args.children[0])
+
+    mainBord.lastChild.remove()
+    removeEvents()
+    setTurnEvent()    
+}
+
+const changePawnTo = (color,parentBox) => {
+
+    const toCastlWith = document.createElement('div')
+    toCastlWith.classList.add('toCastlWith')
+    color === 'white'? toCastlWith.style.top = 0:  toCastlWith.style.bottom = 0;
+
+    changePawnArr = chessChart.filter(char => { 
+        if (char.color == color && char.name !== 'pawn' && char.name !== 'king') {
+            return char        
+        }
+    })
+    changePawnArr.length = 4
+
+    changePawnArr.map(box => {
+
+        let newPawn = document.createElement('div')
+        newPawn.addEventListener('click' , (e) => pawChangeWith(parentBox,e))
+        newPawn.className = 'chessBord';
+        let img = document.createElement('img')
+        img.src = box.imgFile
+        img.dataset.type = box.name
+        img.dataset.color = box.color
+        img.classList.add('char')
+        newPawn.append(img)
+        toCastlWith.append(newPawn)
+
+    })
+    mainBord.appendChild(toCastlWith)
+}
+
+
+const goingTo = (e) => {
+    let box = e.target
     e.target.appendChild(child)
     let data = e.target.children[0].dataset
         data.type == 'rook' && e.target.dataset.x == 1 && e.target.dataset.y == 1?  whiteKingLongStep = false: null;
         data.type == 'rook' && e.target.dataset.x == 8 && e.target.dataset.y == 1?  whiteKingShortStep = false: null;
         data.type == 'rook' && e.target.dataset.x == 1 && e.target.dataset.y == 8?  blackKingLongStep = false: null;
         data.type == 'rook' && e.target.dataset.x == 8 && e.target.dataset.y == 8?  blackKingShortStep = false: null;
-        // console.log(data.color,data.type)
+
         if (data.type == 'king' && data.color == 'white') {
             whiteKingLongStep = false;
             whiteKingShortStep = false;
@@ -183,13 +236,14 @@ const goingTo = (e) => {
         }
 
     if (data.color == 'white' && e.target.dataset.y == 8) {
-        changePawnTo(data.color)
+        changePawnTo(data.color,box)
     }else if (data.color == 'black' && e.target.dataset.y == 1) {
-        changePawnTo(data.color)
+        changePawnTo(data.color,box)
+    }else {
+        removeEvents()
+        setTurnEvent()    
     }
-
-    removeEvents()
-    setTurnEvent()
+    
 }
 
 const whitePawnStap = (x,y,step,color,finesh,cycle) => {
@@ -260,9 +314,6 @@ const blackPawnStap = (x,y,step,color,finesh,cycle) => {
     blackPawnStap(x,y,step,color,finesh,cycle)
 }
 
-const changePawnTo = (color) => {
-    console.log(color)
-}
 
 
 const pawnMove = (img) => {
@@ -273,11 +324,6 @@ const pawnMove = (img) => {
     
     child = img.target
     color = img.target.dataset.color
-    if (color == 'white' && y == 8) {
-        changePawnTo(color)
-    }else if (color == 'black' && y == 1) {
-        changePawnTo(color)
-    }
     y == 2 || y == 7? step = 2 : step = 1;
 
     color == 'white'? whitePawnStap(x,y,step,color,finesh,cycle):
@@ -614,6 +660,7 @@ const drowingBord = (div,place,charBoard) => {
             img.src = chart.imgFile
             img.dataset.type = chart.name
             img.dataset.color = chart.color
+            img.alt = chart.name
             img.classList.add('char')
             div.id = chart.id
             div.appendChild(img)
@@ -623,6 +670,8 @@ const drowingBord = (div,place,charBoard) => {
                 div.children[0].dataset.turn = false
             }
             board.push(div)
+            // console.log(board)
+            
         }
     })
 }
@@ -641,6 +690,7 @@ const table = () => {
         div.dataset.y = line
         div.dataset.name = calum+line
         drowingBord(div,calum+line,chessChart)
+        
         return {x: y+1, y: +line, name: calum+line}
     }))
     setTurnEvent()
