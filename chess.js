@@ -169,17 +169,21 @@ const eateing = (e) => {
     e.target.remove(e.target);
     if (child.parentElement.dataset.y == 8 && child.dataset.color == 'white') {
         changePawnTo(child.dataset.color,child.parentElement)
-    }if (child.parentElement.dataset.y == 1 && child.dataset.color == 'black') {
+    }else if (child.parentElement.dataset.y == 1 && child.dataset.color == 'black') {
         changePawnTo(child.dataset.color,child.parentElement)
+    } else {
+        removeEvents()
+        setTurnEvent()
     }
-    removeEvents()
-    setTurnEvent()
+    
 }
 
 
 const pawChangeWith = (args,e) => {
-
-    e.target.dataset.turn = true
+console.log(e.target.dataset)
+    
+    e.target.dataset.color == "white"?e.target.dataset.turn = true:e.target.dataset.turn = false;
+    
     args.replaceChild(e.target, args.children[0])
 
     mainBord.lastChild.remove()
