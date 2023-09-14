@@ -69,6 +69,9 @@ let blackKingLongStep = true
 let whiteKingShortStep = true
 let blackKingShortStep = true
 
+let kingChax = false;
+let kingShaxMath = false;
+
 let turnTo = true
 
 let bordCount = 0
@@ -121,7 +124,7 @@ const removeEachEvent = (pice) => {
 }
 
 const removeEvents = () => {
-    // console.log('remove Events')
+
     removableBoxes.map(remBox => removeEachEvent(remBox))
     permittedPiece.map(piece => removeEachEvent(piece))
     castlingArr.map(cast => removeEachEvent(cast))
@@ -167,11 +170,12 @@ const eateing = (e) => {
     e.target.parentElement.appendChild(child)
 
     e.target.remove(e.target);
-    if (child.parentElement.dataset.y == 8 && child.dataset.color == 'white') {
+    if (child.dataset.type == 'pawn' && child.parentElement.dataset.y == 8 && child.dataset.color == 'white') {
         changePawnTo(child.dataset.color,child.parentElement)
-    }else if (child.parentElement.dataset.y == 1 && child.dataset.color == 'black') {
+    }else if (child.dataset.type == 'pawn' && child.parentElement.dataset.y == 1 && child.dataset.color == 'black') {
         changePawnTo(child.dataset.color,child.parentElement)
     } else {
+        console.log('hello')
         removeEvents()
         setTurnEvent()
     }
@@ -219,6 +223,28 @@ const changePawnTo = (color,parentBox) => {
 
     })
     mainBord.appendChild(toCastlWith)
+    removeEvents()
+    // setTurnEvent()
+
+}
+
+const chekingShax = (child) => {
+    console.log(child[0])
+    knightMove(child[0])
+}
+
+const pawnExtraEateing = (x,y) => {
+    board.filter(box => {
+        console.log(box.dataset.y,y)
+
+        if (box.dataset.y == y) {
+            console.log(box)
+            if (box.dataset.x == +x+1) {
+                console.log(box)
+            }
+
+        }
+    })
 }
 
 
@@ -239,15 +265,21 @@ const goingTo = (e) => {
             blackKingShortStep = false;
         }
 
-    if (data.color == 'white' && e.target.dataset.y == 8) {
+        if (data.type == 'pawn' && data.color == 'white' && e.target.dataset.y == 5) {
+            console.log(e.target,board)
+            pawnExtraEateing(e.target.x,e.target.y)
+        }else if (data.type == 'pawn' && data.color == 'black' && e.target.dataset.y == 4) {
+            console.log(e.target,board)
+        }
+
+    if (data.type == 'pawn' && data.color == 'white' && e.target.dataset.y == 8) {
         changePawnTo(data.color,box)
-    }else if (data.color == 'black' && e.target.dataset.y == 1) {
+    }else if (data.type == 'pawn' &&  data.color == 'black' && e.target.dataset.y == 1) {
         changePawnTo(data.color,box)
     }else {
         removeEvents()
         setTurnEvent()    
     }
-    
 }
 
 const whitePawnStap = (x,y,step,color,finesh,cycle) => {
@@ -335,12 +367,15 @@ const pawnMove = (img) => {
 }
 
 const knight_top_buttom_check = (box,color) => {
-    
-    if (box.children.length > 0 && box.children[0].dataset.color != color) {
+   
+    if (box.children.length > 0 && box.children[0].dataset.color != color && box.children[0].dataset.type != 'king') {
         addEdibleEvent(box)
         removableBoxes.push(box) 
+    }else if (box.children.length > 0 && box.children[0].dataset.color != color && box.children[0].dataset.type == 'king') {
+        console.log(box)
+        box.classList.add('kingChax')
     }else if (box.children.length > 0 && box.children[0].dataset.color == color) {
-       return null
+       return undefined
    } else {
        addBoxEvents(box)
        return box
@@ -348,10 +383,11 @@ const knight_top_buttom_check = (box,color) => {
 }
 
 const knightMove = (img) => {
+    // console.log(img.parentElement)
     let x = img.target.parentElement.dataset.x
     let y = img.target.parentElement.dataset.y
-    child = img.target
     let color = img.target.dataset.color
+    child = img.target
 
     permittedPiece = board.filter(box => {
         if (box.dataset.y == +y+2) {
@@ -646,7 +682,6 @@ const kingsMove = (img) => {
 }
 
 const moves = (imgMove) => {
-
     removeEvents()
     imgMove.target.dataset.type === "pawn"? pawnMove(imgMove) :null;
     imgMove.target.dataset.type === 'knight'? knightMove(imgMove): null;

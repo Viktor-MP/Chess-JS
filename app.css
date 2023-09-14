@@ -139,3 +139,18 @@ h1 {
   width: 50px;
   height: 200px;
 }
+/* ===================================== */
+
+.kingChax {
+  animation: kingChax 0.2s 5 alternate;
+}
+
+@keyframes kingChax {
+  0% {
+    background-color: red;
+  }
+  100% {
+    background-color: aqua;
+  }
+ 
+}
