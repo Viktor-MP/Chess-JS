@@ -7,7 +7,7 @@ const mainBord = document.createElement('div')
 const root = document.getElementById("root")
 
 
-
+console.log("hello")
 
 root.appendChild(h5)
 root.appendChild(div)
