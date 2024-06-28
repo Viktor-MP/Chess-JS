@@ -63,7 +63,6 @@ h1 {
     grid-template-areas: " a a a a a a a a";
     grid-area: letterArea;
     width: 40vw;
-    height: 25px;
 }
 
 #divForLetters :first-child {
